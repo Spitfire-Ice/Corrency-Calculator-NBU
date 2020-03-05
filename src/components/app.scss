@@ -1,3 +1,37 @@
-.app {
-
+body {
+ background-color: #424874;
+}
+.app--container {
+ background-color: #f4eeff;
+ max-width: 500px;
+ width: 100%;
+ margin: 100px auto;
+ min-height: 400px;
+ border-radius: 5px;
+ box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+ overflow: hidden;
+ position: relative;
+ padding-bottom: 70px;
+}
+h1 {
+ width: 100%;
+ font-size: 28px;
+ font-weight: 800;
+ letter-spacing: 1.2px;
+ line-height: 52px;
+ text-align: center;
+ background-color: #A6B1E1;
+ box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+}
+.addButton {
+ height: 50px;
+ width: 50px;
+ border-radius: 50%;
+ background-color: #DCD6F7;
+ display: flex;
+ justify-content: center;
+ align-items: center;
+ position: absolute;
+ bottom: 10px;
+ right: 10px;
 }
