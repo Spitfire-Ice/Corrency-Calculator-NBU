@@ -34,7 +34,7 @@ const CalcItem = ({calculators,... props}) => {
   const handleChange = event => {
     setCurrency(event.target.value);
   };
-
+  console.log(currency);
   return (
     <div className="CalcItem">
       <TextField
@@ -45,6 +45,9 @@ const CalcItem = ({calculators,... props}) => {
           shrink: true,
         }}
         variant="outlined"
+        value={props.mainValue}
+        onChange={props.handleChangeValue}
+
       />
       <TextField
         id="standard-select-currency"

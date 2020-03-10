@@ -10,8 +10,9 @@ import './app.scss';
 class App extends Component {
   state = {
     calculators: [
-      { id: 0, value: "UAH" }
-    ]
+      { id: 0, }
+    ],
+    mainValue: 7
   };
 
   addCalculator = () => {
@@ -30,30 +31,35 @@ class App extends Component {
       return state
     });
   };
-
+  handleChange = (event) => {
+    this.setState({mainValue: event.target.value});
+  };
 
   render() {
     const {calculators} = this.state;
+    let {mainValue} =this.state;
 
     return (
       <div className="app--container">
         <h1>Currency Calculator</h1>
+        {/*<input type="text" value={this.state.mainValue} onChange={this.handleChange}/>*/}
         {calculators.map(calculator =>(
           <CalcItem
             key={calculator.id}
             calculator={calculator}
             deleteCalculator={()=>this.deleteCalculator(calculator.id)}
+            mainValue={mainValue}
+            handleChangeValue={this.handleChange}
           />
         ))}
         <div className="addButton">
           <IconButton aria-label="add"  onClick={this.addCalculator}>
-              <AddIcon />
+            <AddIcon />
           </IconButton>
         </div>
       </div>
-      )
+    )
   }
 }
-console.log('hello');
 
 export default App;
