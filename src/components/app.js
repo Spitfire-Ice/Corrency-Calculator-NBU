@@ -2,9 +2,11 @@ import React, { Component } from "react";
 import CalcItem from "./CalcItem";
 import AddIcon from '@material-ui/icons/Add';
 import IconButton from "@material-ui/core/IconButton";
+import CustomizedInputs from './InputField';
 
 
 import './app.scss';
+
 
 
 class App extends Component {
@@ -12,14 +14,14 @@ class App extends Component {
     calculators: [
       { id: 0, }
     ],
-    mainValue: 7
+    mainValue: 0,
+
   };
 
   addCalculator = () => {
     this.setState( state => {
       state.calculators.push({
         id: state.calculators.length !== 0 ? state.calculators.length : 0,
-        value: "UAH",
       });
       return state
     })
@@ -32,6 +34,7 @@ class App extends Component {
     });
   };
   handleChange = (event) => {
+    // console.log(this.currency);
     this.setState({mainValue: event.target.value});
   };
 
@@ -42,7 +45,11 @@ class App extends Component {
     return (
       <div className="app--container">
         <h1>Currency Calculator</h1>
-        {/*<input type="text" value={this.state.mainValue} onChange={this.handleChange}/>*/}
+        {/*<input type="number" value={this.state.mainValue} onChange={this.handleChange}/>*/}
+        <CustomizedInputs
+          mainValue={mainValue}
+          handleChangeValue={this.handleChange}
+        />
         {calculators.map(calculator =>(
           <CalcItem
             key={calculator.id}
