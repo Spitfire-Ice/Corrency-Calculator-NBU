@@ -8,13 +8,12 @@ import CustomizedInputs from './InputField';
 import './app.scss';
 
 
-
 class App extends Component {
   state = {
     calculators: [
       { id: 0, }
     ],
-    mainValue: 0,
+    mainValue: "",
 
   };
 
@@ -55,7 +54,8 @@ class App extends Component {
             key={calculator.id}
             calculator={calculator}
             deleteCalculator={()=>this.deleteCalculator(calculator.id)}
-            mainValue={mainValue}
+            {...this.props}
+            mainValue={this.state.mainValue}
             handleChangeValue={this.handleChange}
           />
         ))}

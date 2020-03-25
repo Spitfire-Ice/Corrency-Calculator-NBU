@@ -1,100 +1,101 @@
-import React from "react";
+import React, {Component} from "react";
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
 import IconButton from '@material-ui/core/IconButton';
 import DeleteIcon from '@material-ui/icons/Delete';
 
-
-
 import "./style.scss";
 
 
-const currencies = [
-  {
-    value: 'UAH',
-    label: '₴',
-    factor: 1
-  },
-  {
-    value: 'USD',
-    label: '$',
-    factor: 2
-  },
-  {
-    value: 'EUR',
-    label: '€',
-    factor: 3
-  },
-  {
-    value: 'JPY',
-    label: '¥',
-    factor: 0.3
-  },
-];
 
-const CalcItem = ({calculators,... props}) => {
-  const [currency, setCurrency] = React.useState('UAH');
+class CalcItem extends React.Component {
+  state = {
+      error: null,
+      isLoaded: false,
+      items: [
+        // {"r030":0,"txt":"def","rate":1,"cc":"UAH","exchangedate":null}
+      ],
+      value: "",
+    };
 
-  const handleChange = event => {
-    setCurrency(event.target.value);
-  };
-  let a = 1;
-  function f() {
-    if (currency==='UAH'){
-       a=(((props.mainValue*currencies[0].factor)*100).toFixed())/100;
-      return a
-    } else if (currency==='USD') {
-      a=(((props.mainValue*currencies[1].factor)*100).toFixed())/100;
-      return a
-    }else if (currency==='EUR') {
-      a=(((props.mainValue*currencies[2].factor)*100).toFixed())/100;
-      return a
-    }else if (currency==='JPY') {
-      a=(((props.mainValue*currencies[3].factor)*100).toFixed())/100;
-      return a
-    }
-  }
-  // console.log(currency);
-  return (
-    <div className="CalcItem">
-      <TextField
-        id="outlined-number"
-        label="Value"
-        type="number"
-        InputLabelProps={{
-          shrink: true,
-        }}
-        variant="outlined"
-        // value={props.mainValue}
-        value={
-          // currency==='USD'? (props.mainValue*currencies[1].factor).toFixed(1) :props.mainValue
-          f(a)===''? 0 :f(a)
+  componentDidMount() {
+    fetch("https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?json")
+      .then(res => res.json())
+      .then(
+        (result) => {
+          this.setState({
+            isLoaded: true,
+            items: result
+          });
+        },
+        // Примітка: важливо обробляти помилки саме тут,
+        // а не в блоці catch (), щоб не перехоплювати
+        // виключення з помилок в самих компонентах.
+        (error) => {
+          this.setState({
+            isLoaded: true,
+            error
+          });
         }
-        // onChange={props.handleChangeValue}
+      );
 
-      />
-      <TextField
-        id="standard-select-currency"
-        select
-        label="Select"
-        value={currency}
-        onChange={handleChange}
-        helperText="Please select your currency"
-      >
-        {currencies.map(option => (
-          <MenuItem key={option.value} value={option.value}>
-            {option.label}
-          </MenuItem>
-        ))}
-      </TextField>
-      <IconButton
-        aria-label="delete"
-        onClick={props.deleteCalculator}
-      >
-        <DeleteIcon />
-      </IconButton>
-    </div>
-  )
-};
+  };
+
+  handleChange(event) {
+    this.setState({value: event.target.value});
+    this.setState({rate: event.target.rate});
+  }
+
+  render() {
+    // console.log(((this.state.value.slice(3)*100).toFixed())/100);
+    // console.log((((this.props.mainValue*this.state.value).slice(3)*100).toFixed())/100);
+    // console.log(typeof this.props.mainValue);
+    // console.log(this.state.value);
+    // console.log(parseFloat(this.state.value.slice(3)));
+
+
+    return (
+      <div className="CalcItem">
+        <TextField
+          id="outlined-number"
+          label="Value"
+          type="number"
+          InputLabelProps={{
+            shrink: true,
+          }}
+          variant="outlined"
+
+          value={
+            this.state.value?(((parseFloat((this.state.value.slice(3)))*100)*this.props.mainValue).toFixed())/100:0
+          }
+
+        />
+        <TextField
+          id="standard-select-currency"
+          select
+          label="Select"
+          value={this.state.value}
+          onChange={this.handleChange.bind(this)}
+          helperText="Please select your currency"
+        >
+          {this.state.items.map(items => (
+            <MenuItem key={items.r030} value={items.cc+items.rate}>
+              {items.cc}
+            </MenuItem>
+          ))}
+        </TextField>
+        <IconButton
+          aria-label="delete"
+          onClick={this.props.deleteCalculator}
+        >
+          <DeleteIcon />
+        </IconButton>
+      </div>
+    )
+  }
+
+
+
+}
 
 export default CalcItem
